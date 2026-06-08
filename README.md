@@ -185,42 +185,6 @@ menus   →  game.py      (returns string action signals, never mutate state)
 
 ---
 
-## Adding Audio
-
-Drop WAV/OGG files into `assets/sounds/` and `assets/music/`. See `assets/README.md` for filenames. The game runs silently without them.
-
-**Free resources:**
-- SFX: [jsfxr](https://sfxr.me/) (browser, free)
-- Music: [OpenGameArt.org](https://opengameart.org/)
-
----
-
-## Packaging as Executable
-
-### PyInstaller (recommended)
-
-```bash
-pip install pyinstaller
-
-# Single-file EXE (Windows)
-pyinstaller --onefile --windowed --name=deadzone main.py
-
-# Include assets
-pyinstaller --onefile --windowed --name=deadzone \
-  --add-data "assets;assets" main.py
-
-# Output: dist/deadzone.exe
-```
-
-### Nuitka (faster binary)
-
-```bash
-pip install nuitka
-nuitka --standalone --onefile --windows-disable-console main.py
-```
-
----
-
 ## Tuning & Balance
 
 All balance values are in `settings.py`. Key knobs:
@@ -238,54 +202,6 @@ All balance values are in `settings.py`. Key knobs:
 
 ---
 
-## Future Expansion Ideas
-
-### Short-term
-- [ ] Pickup items (health pack, ammo crate)
-- [ ] XP system with level-up stat boosts
-- [ ] Minimap (simple dot representation)
-- [ ] Kill streak multiplier
-- [ ] High score persistence (JSON save file)
-
-### Medium-term
-- [ ] Obstacle/wall system with pathfinding (A*)
-- [ ] More zombie types (exploder, ranged spitter)
-- [ ] Weapon drops from boss kills
-- [ ] Animated sprite sheets (replace procedural drawing)
-- [ ] Controller support
-
-### Long-term
-- [ ] Multiple arenas / map selection
-- [ ] Roguelite meta-progression
-- [ ] Local co-op (split screen)
-- [ ] Steam integration via Pygame CE
-
----
-
-## Performance Notes
-
-Current approach supports ~200 zombies at 60 FPS on modest hardware.
-
-**If you need more entities:**
-1. Replace `list` with a simple spatial grid hash in `collision.py`
-2. Batch particle draws into a single surface per frame
-3. Use `pygame.sprite.Group` with dirty-rect rendering for static entities
-4. Profile with `cProfile`: `python -m cProfile -s cumtime main.py`
-
----
-
-## Refactoring for Larger Scale
-
-| Current pattern        | At scale, replace with               |
-|------------------------|--------------------------------------|
-| Entity lists in game.py| EntityManager with type-keyed dicts  |
-| Direct attribute access| Property-based interfaces            |
-| String game states     | Already using IntEnum ✓              |
-| O(n²) collision        | Grid spatial hash                    |
-| pygame.font.SysFont    | Bundled TTF font via pygame.font.Font|
-| Manual sound loading   | SoundManager with pooled channels    |
-
----
 
 ## License
 
